@@ -34,7 +34,7 @@ class DisplayStatusSensor(SensorEntity):
         try:
             async with aiohttp.ClientSession() as session:
                 async with async_timeout.timeout(10):  # Set a timeout for the request
-                    async with session.get(f"{self._url}/display_status") as response:
+                    async with session.get(f"{self._url}/system/display_status") as response:
                         if response.status == 200:
                             data = await response.json()
                             self._state = data.get("display_on")
