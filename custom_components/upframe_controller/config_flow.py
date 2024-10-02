@@ -10,10 +10,13 @@ class DisplayConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input=None):
         """Handle the initial step."""
         if user_input is not None:
-            return self.async_create_entry(title="Display Control", data=user_input)
+            # Create a config entry with the user-provided name and URL
+            return self.async_create_entry(title=user_input["name"], data=user_input)
 
+        # Define the schema with both URL and name
         data_schema = vol.Schema({
-            vol.Required("url"): str
+            vol.Required("name"): str,  # Ask for a name
+            vol.Required("url"): str    # Ask for the URL
         })
 
         return self.async_show_form(
