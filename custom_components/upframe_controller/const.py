@@ -1,1 +1,1 @@
-DOMAIN = "upframe.art"
+DOMAIN = "upframe_controller"
