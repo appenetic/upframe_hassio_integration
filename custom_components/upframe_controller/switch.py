@@ -1,5 +1,8 @@
-import requests
+import aiohttp
+import async_timeout
+import logging
 from homeassistant.components.switch import SwitchEntity
+from homeassistant.const import STATE_ON, STATE_OFF
 from . import DOMAIN
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
@@ -22,20 +25,42 @@ class DisplaySwitch(SwitchEntity):
     @property
     def is_on(self):
         return self._is_on
-    
+
     @property
     def icon(self):
         """Return the icon to be used for this entity."""
         return "mdi:monitor-vertical"
 
-    def turn_on(self, **kwargs):
-        """Send a request to turn on the display."""
-        response = requests.get(f"{self._url}/system/turn_on_display")
-        if response.status_code == 200:
-            self._is_on = True
+    async def async_update(self):
+        """Fetch the display status to sync the switch state."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with async_timeout.timeout(10):  # Timeout of 10 seconds
+                    async with session.get(f"{self._url}/system/display_status") as response:
+                        if response.status == 200:
+                            data = await response.json()
+                            is_display_on = data.get("display_on")
+                            self._is_on = True if is_display_on else False
+                            _LOGGER.info("Switch updated: %s", self._is_on)
+                        else:
+                            _LOGGER.error("Failed to fetch display status for switch, status: %s", response.status)
+        except aiohttp.ClientError as e:
+            _LOGGER.error("Aiohttp client error occurred: %s", e)
+        except asyncio.TimeoutError:
+            _LOGGER.error("Timeout occurred while fetching display status for switch")
 
-    def turn_off(self, **kwargs):
+    async def async_turn_on(self, **kwargs):
+        """Send a request to turn on the display."""
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"{self._url}/system/turn_on_display") as response:
+                if response.status == 200:
+                    self._is_on = True
+                    _LOGGER.info("Display turned on successfully")
+
+    async def async_turn_off(self, **kwargs):
         """Send a request to turn off the display."""
-        response = requests.get(f"{self._url}/system/turn_off_display")
-        if response.status_code == 200:
-            self._is_on = False
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"{self._url}/system/turn_off_display") as response:
+                if response.status == 200:
+                    self._is_on = False
+                    _LOGGER.info("Display turned off successfully")
