@@ -25,12 +25,12 @@ class DisplaySwitch(SwitchEntity):
 
     def turn_on(self, **kwargs):
         """Send a request to turn on the display."""
-        response = requests.get(f"{self._url}/turn_on_display")
+        response = requests.get(f"{self._url}/system/turn_on_display")
         if response.status_code == 200:
             self._is_on = True
 
     def turn_off(self, **kwargs):
         """Send a request to turn off the display."""
-        response = requests.get(f"{self._url}/turn_off_display")
+        response = requests.get(f"{self._url}/system/turn_off_display")
         if response.status_code == 200:
             self._is_on = False

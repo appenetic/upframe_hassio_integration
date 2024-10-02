@@ -26,7 +26,7 @@ class DisplayStatusSensor(SensorEntity):
     async def async_update(self):
         """Fetch the display status from the server."""
         try:
-            response = requests.get(f"{self._url}/display_status")
+            response = requests.get(f"{self._url}/system/display_status")
             if response.status_code == 200:
                 self._state = response.json().get("display_on")
         except Exception as e:
