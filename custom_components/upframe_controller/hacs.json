@@ -1,0 +1,12 @@
+{
+  "name": "Upframe.art Controller",
+  "domain": "upframe.art",
+  "filename": "custom_components/upframe_controller/__init__.py",
+  "version": "1.0.0",
+  "documentation": "https://github.com/appenetic/upframe_hassio_integration",
+  "issue_tracker": "https://github.com/appenetic/upframe_hassio_integration/issues",
+  "requirements": ["requests"],
+  "codeowners": ["@appenetic"],
+  "config_flow": true,
+  "iot_class": "local_polling"
+}
