@@ -1,0 +1,9 @@
+{
+  "domain": "upframe.art",
+  "name": "Upframe.art controller",
+  "version": "1.0",
+  "config_flow": true,
+  "documentation": "https://upframe.art",
+  "requirements": ["requests"],
+  "codeowners": ["@appenetic"]
+}
