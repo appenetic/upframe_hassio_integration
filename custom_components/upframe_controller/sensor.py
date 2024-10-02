@@ -1,5 +1,7 @@
-import requests
 from homeassistant.components.sensor import SensorEntity
+from homeassistant.core import HomeAssistant
+import aiohttp
+import async_timeout
 from . import DOMAIN
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
@@ -24,10 +26,15 @@ class DisplayStatusSensor(SensorEntity):
         return self._state
 
     async def async_update(self):
-        """Fetch the display status from the server."""
+        """Fetch the display status from the server asynchronously."""
         try:
-            response = requests.get(f"{self._url}/system/display_status")
-            if response.status_code == 200:
-                self._state = response.json().get("display_on")
-        except Exception as e:
+            async with aiohttp.ClientSession() as session:
+                async with async_timeout.timeout(10):  # Set a timeout for the request
+                    async with session.get(f"{self._url}/display_status") as response:
+                        if response.status == 200:
+                            data = await response.json()
+                            self._state = data.get("display_on")
+                        else:
+                            self._state = None
+        except (aiohttp.ClientError, asyncio.TimeoutError) as e:
             self._state = None
