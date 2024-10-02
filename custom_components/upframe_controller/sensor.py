@@ -8,15 +8,16 @@ from . import DOMAIN
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up the display status sensor."""
     url = hass.data[DOMAIN][config_entry.entry_id]["url"]
-    async_add_entities([DisplayStatusSensor(url)])
+    async_add_entities([DisplayStatusSensor(url, config_entry)])
 
 class DisplayStatusSensor(SensorEntity):
     """Representation of the display status sensor."""
 
-    def __init__(self, url):
-        self._name = "Display Status"
+    def __init__(self, url, config_entry):
+        self._name = "Monitor Status"
         self._state = None
         self._url = url
+        self._config_entry = config_entry
 
     @property
     def name(self):
@@ -29,6 +30,11 @@ class DisplayStatusSensor(SensorEntity):
     @property
     def icon(self):
         return "mdi:monitor-vertical"
+    
+    @property
+    def unique_id(self):
+        """Return a unique ID for this entity."""
+        return f"display_control_sensor_{self._config_entry.entry_id}"
 
     async def async_update(self):
         """Fetch the display status from the server asynchronously."""

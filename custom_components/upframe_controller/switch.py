@@ -6,15 +6,16 @@ from . import DOMAIN
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up the display control switch."""
     url = hass.data[DOMAIN][config_entry.entry_id]["url"]
-    async_add_entities([DisplaySwitch(url)])
+    async_add_entities([DisplaySwitch(url, config_entry)])
 
 class DisplaySwitch(SwitchEntity):
     """Representation of a switch to control the display."""
-
-    def __init__(self, url):
-        self._name = "Display Control"
+    
+    def __init__(self, url, config_entry):
+        self._name = "Monitor Control"
         self._is_on = False
         self._url = url
+        self._config_entry = config_entry
 
     @property
     def name(self):
@@ -28,6 +29,11 @@ class DisplaySwitch(SwitchEntity):
     def icon(self):
         """Return the icon to be used for this entity."""
         return "mdi:monitor-vertical"
+    
+    @property
+    def unique_id(self):
+        """Return a unique ID for this entity."""
+        return f"display_control_switch_{self._config_entry.entry_id}"
 
     async def async_update(self):
         """Fetch the display status to sync the switch state."""
