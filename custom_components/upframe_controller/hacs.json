@@ -1,5 +1,5 @@
 {
-  "name": "Upframe.art Controller",
+  "name": "Upframe",
   "domain": "upframe_controller",
   "filename": "custom_components/upframe_controller/__init__.py",
   "version": "1.0.0",

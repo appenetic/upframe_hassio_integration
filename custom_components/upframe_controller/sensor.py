@@ -24,6 +24,10 @@ class DisplayStatusSensor(SensorEntity):
     @property
     def state(self):
         return self._state
+    
+    @property
+    def icon(self):
+        return "mdi:monitor-vertical"
 
     async def async_update(self):
         """Fetch the display status from the server asynchronously."""

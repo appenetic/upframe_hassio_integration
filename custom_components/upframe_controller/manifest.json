@@ -1,8 +1,10 @@
 {
   "domain": "upframe_controller",
-  "name": "Upframe.art controller",
+  "name": "Upframe",
   "version": "1.0",
   "config_flow": true,
+  "iot_class": "local_polling",
+  "icon": "custom_components/upframe_controller/icon.png",
   "documentation": "https://upframe.art",
   "requirements": ["requests"],
   "codeowners": ["@appenetic"]

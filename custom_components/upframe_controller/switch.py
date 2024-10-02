@@ -22,6 +22,11 @@ class DisplaySwitch(SwitchEntity):
     @property
     def is_on(self):
         return self._is_on
+    
+    @property
+    def icon(self):
+        """Return the icon to be used for this entity."""
+        return "mdi:monitor-vertical"
 
     def turn_on(self, **kwargs):
         """Send a request to turn on the display."""
